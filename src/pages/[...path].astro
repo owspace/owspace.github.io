@@ -1,0 +1,12 @@
+---
+import routes from '../lib/routes.json';
+import shell from '../lib/shell.json';
+export function getStaticPaths() {
+  return Object.keys(routes).map(route => ({params:{path:route === '/' ? undefined : route.slice(1,-1)},props:{route}}));
+}
+const {route} = Astro.props;
+const body = routes[route];
+const heading = body.match(/<h1>(.*?)<\/h1>/s)?.[1]?.replace(/<[^>]+>/g,'') || '独立软件工作室';
+const title = route === '/' ? 'OWSPACE — 独立软件工作室' : heading + ' · OWSPACE';
+---
+<Fragment set:html={shell.head.replace('__PAGE_TITLE__', title) + body + shell.footer + '</body></html>'} />
